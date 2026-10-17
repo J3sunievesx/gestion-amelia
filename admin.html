@@ -1,0 +1,2257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#4A3A32">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>AMELIA Accesorios | Panel Integral de Gestión</title>
+
+  <!-- Google Fonts: Playfair Display & Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. PALETA DE COLORES OFICIAL Y ESTILOS DE DISEÑO (BRANDING)
+       ========================================================================== */
+    :root {
+      --blanco-hueso: #F9F7F3;   /* Fondo general de la aplicación */
+      --nude-claro: #E8D9CC;     /* Fondo de tarjetas, módulos e inputs */
+      --nude-rosado: #D6B8A9;    /* Bordes, acentos suaves, sombras y divisiones */
+      --marron-medio: #A88976;   /* Botones secundarios, iconos y estados intermedios */
+      --marron-oscuro: #4A3A32;  /* Texto principal, títulos y botones primarios */
+
+      /* Estados de Stock & Alertas */
+      --stock-disponible: #2D6A4F;
+      --stock-disponible-bg: #E8F5E9;
+      --stock-bajo: #B7791F;
+      --stock-bajo-bg: #FEFCBF;
+      --stock-agotado: #9B2C2C;
+      --stock-agotado-bg: #FED7D7;
+
+      --shadow-sm: 0 2px 8px rgba(74, 58, 50, 0.05);
+      --shadow-md: 0 4px 16px rgba(74, 58, 50, 0.08);
+      --shadow-lg: 0 10px 25px rgba(74, 58, 50, 0.12);
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+      background-color: var(--blanco-hueso);
+      color: var(--marron-oscuro);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14.5px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, .brand-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      color: var(--marron-oscuro);
+      font-weight: 700;
+    }
+
+    /* PANTALLA DE LOGIN CON GOOGLE */
+    #loginScreen {
+      min-height: 100vh;
+      width: 100vw;
+      max-width: 100vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 20px;
+      background: linear-gradient(180deg, #FFFFFF 0%, var(--blanco-hueso) 100%);
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      padding: 36px 24px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--nude-rosado);
+      text-align: center;
+    }
+
+    .brand-logo-circle {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 18px;
+      background: var(--nude-claro);
+      border: 2px solid var(--marron-medio);
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .login-card h1 {
+      font-size: 1.75rem;
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+
+    .login-card .subtitle {
+      font-size: 0.85rem;
+      color: var(--marron-medio);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .login-alert {
+      display: none;
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 18px;
+      text-align: left;
+    }
+    .login-alert.error {
+      background-color: var(--stock-agotado-bg);
+      color: var(--stock-agotado);
+      border: 1px solid var(--nude-rosado);
+    }
+    .login-alert.info {
+      background-color: var(--nude-claro);
+      color: var(--marron-oscuro);
+      border: 1px solid var(--nude-rosado);
+    }
+
+    .btn-google {
+      width: 100%;
+      min-height: 48px;
+      background-color: var(--marron-oscuro);
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: var(--shadow-md);
+      transition: all 0.2s ease;
+      touch-action: manipulation;
+    }
+    .btn-google:active {
+      transform: scale(0.98);
+      background-color: #362922;
+    }
+    .btn-google:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .login-security-notice {
+      margin-top: 24px;
+      font-size: 0.76rem;
+      color: var(--marron-medio);
+      line-height: 1.4;
+      border-top: 1px solid var(--nude-claro);
+      padding-top: 16px;
+    }
+
+    /* APLICACIÓN PRINCIPAL (SPA) */
+    #appInterface {
+      display: none;
+      min-height: 100vh;
+      width: 100%;
+      max-width: 100vw;
+      flex-direction: column;
+      padding-bottom: 80px; /* Espacio para barra de navegación móvil */
+    }
+
+    /* BARRA SUPERIOR (HEADER) */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: #FFFFFF;
+      border-bottom: 1px solid var(--nude-rosado);
+      box-shadow: var(--shadow-sm);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .header-branding {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-logo-icon {
+      font-size: 1.3rem;
+      background: var(--nude-claro);
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--nude-rosado);
+    }
+    .header-title-box h2 {
+      font-size: 1.05rem;
+      line-height: 1.1;
+      letter-spacing: -0.3px;
+    }
+    .header-title-box span {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--marron-medio);
+      font-weight: 600;
+    }
+
+    .header-user-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .user-pill {
+      display: flex;
+      align-items: center;
+      background-color: var(--nude-claro);
+      padding: 6px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--marron-oscuro);
+      border: 1px solid var(--nude-rosado);
+      max-width: 140px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .btn-logout {
+      min-height: 36px;
+      background: transparent;
+      border: 1px solid var(--nude-rosado);
+      color: var(--marron-oscuro);
+      border-radius: var(--radius-md);
+      padding: 6px 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: 'Montserrat', sans-serif;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s;
+    }
+    .btn-logout:active {
+      background-color: var(--nude-claro);
+    }
+
+    /* BARRA DE NAVEGACIÓN FIJA (MOBILE FIRST) */
+    .nav-tabs-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 110;
+      background-color: #FFFFFF;
+      border-top: 1px solid var(--nude-rosado);
+      display: flex;
+      justify-content: space-around;
+      padding: 6px 8px env(safe-area-inset-bottom, 8px);
+      box-shadow: 0 -4px 16px rgba(74, 58, 50, 0.08);
+      max-width: 100vw;
+    }
+
+    .nav-tab-btn {
+      flex: 1;
+      min-height: 50px;
+      background: none;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: var(--marron-medio);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: var(--radius-md);
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+      padding: 4px 2px;
+    }
+    .nav-tab-btn .tab-icon {
+      font-size: 1.15rem;
+      line-height: 1;
+    }
+    .nav-tab-btn.active {
+      color: var(--marron-oscuro);
+      background-color: var(--nude-claro);
+      font-weight: 700;
+    }
+
+    /* CONTENEDOR PRINCIPAL DE CONTENIDO */
+    .app-main {
+      padding: 16px;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* COMPONENTES GENERALES Y TARJETAS */
+    .card {
+      background-color: #FFFFFF;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--nude-rosado);
+      padding: 18px 16px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .card-title {
+      font-size: 1.15rem;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-subtitle {
+      font-size: 0.78rem;
+      color: var(--marron-medio);
+      margin-bottom: 16px;
+    }
+
+    /* CONTROLES DE FORMULARIO */
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--marron-oscuro);
+      margin-bottom: 5px;
+    }
+    .form-control {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 14px;
+      background-color: var(--nude-claro);
+      border: 1px solid var(--nude-rosado);
+      border-radius: var(--radius-md);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+      color: var(--marron-oscuro);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-control:focus {
+      border-color: var(--marron-oscuro);
+      background-color: #FFFFFF;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 480px) {
+      .form-row.mobile-stack {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .calculation-box {
+      background-color: var(--blanco-hueso);
+      border: 1px dashed var(--marron-medio);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      margin: 14px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .calc-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+    }
+    .calc-line.highlight {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--marron-oscuro);
+      border-top: 1px solid var(--nude-rosado);
+      padding-top: 6px;
+      margin-top: 2px;
+    }
+
+    /* BOTONES PRIMARIOS Y SECUNDARIOS */
+    .btn-primary {
+      width: 100%;
+      min-height: 46px;
+      background-color: var(--marron-oscuro);
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: var(--shadow-md);
+      transition: transform 0.1s ease;
+      touch-action: manipulation;
+    }
+    .btn-primary:active {
+      transform: scale(0.98);
+      background-color: #362922;
+    }
+
+    .btn-secondary {
+      min-height: 42px;
+      background-color: var(--marron-medio);
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 8px 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: opacity 0.2s;
+    }
+    .btn-secondary:active {
+      opacity: 0.85;
+    }
+
+    /* KPI METRICS GRID */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    @media (min-width: 768px) {
+      .kpi-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    .kpi-card {
+      background-color: #FFFFFF;
+      border: 1px solid var(--nude-rosado);
+      border-radius: var(--radius-md);
+      padding: 14px 12px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .kpi-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--marron-medio);
+      margin-bottom: 4px;
+    }
+    .kpi-value-usd {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--marron-oscuro);
+      line-height: 1.2;
+    }
+    .kpi-value-bs {
+      font-size: 0.75rem;
+      color: var(--marron-medio);
+      font-weight: 600;
+      margin-top: 3px;
+    }
+
+    /* BARRA DE TASA DEL DÍA */
+    .rate-bar-card {
+      background: linear-gradient(135deg, var(--nude-claro) 0%, #FFFFFF 100%);
+      border: 1px solid var(--nude-rosado);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .rate-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .rate-badge-icon {
+      font-size: 1.4rem;
+    }
+    .rate-text h4 {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: var(--marron-medio);
+      letter-spacing: 0.8px;
+    }
+    .rate-display-val {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--marron-oscuro);
+    }
+    .rate-update-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .rate-input-sm {
+      max-width: 110px;
+      min-height: 38px;
+      padding: 6px 10px;
+      background: #FFFFFF;
+      border: 1px solid var(--nude-rosado);
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--marron-oscuro);
+    }
+    .btn-rate-save {
+      min-height: 38px;
+      padding: 0 12px;
+      background: var(--marron-oscuro);
+      color: #FFFFFF;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* DESGLOSE POR CANAL DE VENTA */
+    .channels-breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .channel-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .channel-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .progress-bar-bg {
+      width: 100%;
+      height: 9px;
+      background-color: var(--nude-claro);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background-color: var(--marron-medio);
+      border-radius: var(--radius-full);
+      transition: width 0.4s ease;
+    }
+
+    /* BADGES Y ETIQUETAS */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-channel {
+      background-color: var(--nude-claro);
+      color: var(--marron-oscuro);
+      border: 1px solid var(--nude-rosado);
+    }
+    .badge-stock-disponible {
+      background-color: var(--stock-disponible-bg);
+      color: var(--stock-disponible);
+      border: 1px solid rgba(45, 106, 79, 0.2);
+    }
+    .badge-stock-bajo {
+      background-color: var(--stock-bajo-bg);
+      color: var(--stock-bajo);
+      border: 1px solid rgba(183, 121, 31, 0.3);
+    }
+    .badge-stock-agotado {
+      background-color: var(--stock-agotado-bg);
+      color: var(--stock-agotado);
+      border: 1px solid rgba(155, 44, 44, 0.2);
+    }
+
+    /* HISTORIAL Y TABLAS MÓVILES */
+    .history-card-item {
+      background: #FFFFFF;
+      border: 1px solid var(--nude-rosado);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .history-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .history-item-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--marron-oscuro);
+    }
+    .history-item-date {
+      font-size: 0.72rem;
+      color: var(--marron-medio);
+    }
+    .history-item-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      border-top: 1px dashed var(--nude-claro);
+      padding-top: 6px;
+      margin-top: 4px;
+    }
+    .net-profit-val {
+      font-weight: 700;
+      color: var(--stock-disponible);
+    }
+
+    /* CONTROLES DE PAGINACIÓN */
+    .pagination-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      margin-top: 10px;
+      border-top: 1px solid var(--nude-rosado);
+    }
+    .btn-pagination {
+      min-height: 40px;
+      padding: 0 16px;
+      background: var(--nude-claro);
+      border: 1px solid var(--nude-rosado);
+      border-radius: var(--radius-md);
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--marron-oscuro);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-pagination:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .pagination-info {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--marron-medio);
+    }
+
+    /* FILTROS Y BUSCADOR DE STOCK */
+    .stock-filters-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .stock-filters-bar::-webkit-scrollbar {
+      display: none;
+    }
+    .stock-filter-pill {
+      min-height: 38px;
+      padding: 0 14px;
+      background: var(--nude-claro);
+      border: 1px solid var(--nude-rosado);
+      border-radius: var(--radius-full);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--marron-oscuro);
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .stock-filter-pill.active {
+      background: var(--marron-oscuro);
+      color: #FFFFFF;
+      border-color: var(--marron-oscuro);
+    }
+
+    /* TARJETA DE PRODUCTO / STOCK */
+    .product-stock-card {
+      background: #FFFFFF;
+      border: 1px solid var(--nude-rosado);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .product-stock-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .product-stock-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--marron-oscuro);
+    }
+    .product-type-tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--marron-medio);
+      background: var(--blanco-hueso);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--nude-rosado);
+      display: inline-block;
+      margin-top: 2px;
+    }
+    .product-pricing-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-top: 4px;
+      border-top: 1px dashed var(--nude-claro);
+    }
+    .price-usd-text {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--marron-oscuro);
+    }
+    .price-bs-text {
+      font-size: 0.8rem;
+      color: var(--marron-medio);
+      font-weight: 600;
+    }
+
+    .stock-counter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--blanco-hueso);
+      border-radius: var(--radius-md);
+      padding: 8px 12px;
+    }
+    .stock-count-label {
+      font-size: 0.75rem;
+      color: var(--marron-medio);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .stock-count-number {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--marron-oscuro);
+    }
+    .stock-action-buttons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-stock-delta {
+      width: 44px;
+      height: 44px;
+      background: #FFFFFF;
+      border: 1px solid var(--marron-medio);
+      border-radius: var(--radius-md);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--marron-oscuro);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+      transition: background 0.15s;
+    }
+    .btn-stock-delta:active {
+      background: var(--nude-claro);
+    }
+    .btn-stock-delta:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* TOAST FLOTANTE */
+    #toastNotification {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-60px);
+      background-color: var(--marron-oscuro);
+      color: #FFFFFF;
+      padding: 12px 20px;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      z-index: 1000;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: 90vw;
+      text-align: center;
+    }
+    #toastNotification.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .empty-placeholder {
+      text-align: center;
+      padding: 30px 16px;
+      color: var(--marron-medio);
+    }
+    .empty-placeholder .icon {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PANTALLA DE ACCESO (LOGIN CON FIREBASE AUTH) -->
+  <section id="loginScreen">
+    <div class="login-card">
+      <div class="brand-logo-circle">✨</div>
+      <h1>AMELIA</h1>
+      <div class="subtitle">Accesorios • Panel Integral</div>
+
+      <div id="loginAlert" class="login-alert"></div>
+
+      <button id="btnGoogleLogin" class="btn-google" onclick="handleGoogleSignIn()">
+        <svg width="20" height="20" viewBox="0 0 24 24">
+          <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.6l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"/>
+          <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.7-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+          <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.8s.2-2.1.4-2.8L1.9 6.3C.7 8.7 0 10.3 0 12s.7 3.3 1.9 5.7l3.7-2.9z"/>
+          <path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.4-6.4-5.2L1.9 16c1.8 3.7 5.6 7 10.1 7z"/>
+        </svg>
+        <span id="btnGoogleText">Continuar con Google</span>
+      </button>
+
+      <div class="login-security-notice">
+        🔒 <strong>Acceso Estricto y Protegido:</strong> Sistema exclusivo para el equipo autorizado de AMELIA Accesorios.
+      </div>
+    </div>
+  </section>
+
+  <!-- APLICACIÓN PRINCIPAL (SPA) -->
+  <div id="appInterface">
+    <!-- Header Fijo -->
+    <header class="app-header">
+      <div class="header-branding">
+        <div class="header-logo-icon">✨</div>
+        <div class="header-title-box">
+          <h2>AMELIA</h2>
+          <span>Panel de Gestión</span>
+        </div>
+      </div>
+      <div class="header-user-actions">
+        <span id="userEmailBadge" class="user-pill" title="Usuario activo">...</span>
+        <button class="btn-logout" onclick="handleLogout()" title="Cerrar sesión">
+          <span>Salir</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Contenido Principal Dinámico -->
+    <main class="app-main">
+
+      <!-- ======================================================================
+           PESTAÑA 1: DASHBOARD / RESUMEN EJECUTIVO
+           ====================================================================== -->
+      <section id="tab-dashboard" class="tab-content active">
+        <!-- Tasa del Día -->
+        <div class="rate-bar-card">
+          <div class="rate-info">
+            <span class="rate-badge-icon">💵</span>
+            <div class="rate-text">
+              <h4>Tasa Oficial del Día</h4>
+              <div class="rate-display-val" id="displayExchangeRate">1 USD = 0.00 Bs.</div>
+            </div>
+          </div>
+          <div class="rate-update-box">
+            <input type="number" step="0.01" id="inputNewExchangeRate" class="rate-input-sm" placeholder="Nueva tasa">
+            <button class="btn-rate-save" onclick="updateExchangeRate()">Actualizar</button>
+          </div>
+        </div>
+
+        <!-- KPIs Clave -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-label">Capital Invertido</span>
+            <div class="kpi-value-usd" id="kpiCapitalInvestedUSD">$0.00</div>
+            <div class="kpi-value-bs" id="kpiCapitalInvestedBs">≈ 0.00 Bs.</div>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Ganancia Bruta Recuperada</span>
+            <div class="kpi-value-usd" id="kpiGrossRevenueUSD">$0.00</div>
+            <div class="kpi-value-bs" id="kpiGrossRevenueBs">≈ 0.00 Bs.</div>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Total Ventas</span>
+            <div class="kpi-value-usd" id="kpiTotalSalesCount">0</div>
+            <div class="kpi-value-bs" id="kpiPiecesSoldCount">0 piezas vendidas</div>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Disponibles vs Agotadas</span>
+            <div class="kpi-value-usd" id="kpiStockRatio">0 / 0</div>
+            <div class="kpi-value-bs" id="kpiStockStatusText">0 piezas en inventario</div>
+          </div>
+        </div>
+
+        <!-- Desglose por Canal de Venta -->
+        <div class="card">
+          <h3 class="card-title">📊 Ventas por Canal</h3>
+          <p class="card-subtitle">Distribución porcentual de piezas vendidas por medio de contacto</p>
+          <div id="channelsBreakdownContainer" class="channels-breakdown">
+            <div class="empty-placeholder">
+              <div class="icon">📈</div>
+              <p>No hay ventas registradas aún para calcular estadísticas.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================================
+           PESTAÑA 2: GESTIÓN DE COMPRAS Y LOTES (ENTRADAS DE MERCANCÍA)
+           ====================================================================== -->
+      <section id="tab-lotes" class="tab-content">
+        <div class="card">
+          <h3 class="card-title">📦 Registrar Nuevo Lote de Mercancía</h3>
+          <p class="card-subtitle">Ingresa las compras de mercancía para costear y calcular el valor unitario real</p>
+
+          <form id="formNewLot" onsubmit="handleSaveLot(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="lotType">Tipo de Artículo *</label>
+                <select id="lotType" class="form-control" required>
+                  <option value="Zarcillos">Zarcillos</option>
+                  <option value="Collares">Collares</option>
+                  <option value="Pulseras">Pulseras</option>
+                  <option value="Anillos">Anillos</option>
+                  <option value="Conjuntos">Conjuntos</option>
+                  <option value="Otros">Otros</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="lotDate">Fecha de Compra *</label>
+                <input type="date" id="lotDate" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="lotName">Código / Nombre del Lote *</label>
+              <input type="text" id="lotName" class="form-control" placeholder="Ej: Lote 01 - Zarcillos Geométricos" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="lotBaseCost">Costo Mercancía ($) *</label>
+                <input type="number" step="0.01" id="lotBaseCost" class="form-control" placeholder="0.00" oninput="calculateLotTotals()" required>
+              </div>
+
+              <div class="form-group">
+                <label for="lotShippingCost">Costo Envío / Logística ($) *</label>
+                <input type="number" step="0.01" id="lotShippingCost" class="form-control" placeholder="0.00" oninput="calculateLotTotals()" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="lotPieces">Piezas Recibidas *</label>
+                <input type="number" id="lotPieces" class="form-control" placeholder="Ej: 50" min="1" oninput="calculateLotTotals()" required>
+              </div>
+
+              <div class="form-group">
+                <label for="lotSalePrice">Precio Sugerido Venta ($)</label>
+                <input type="number" step="0.01" id="lotSalePrice" class="form-control" placeholder="5.00" value="5.00">
+              </div>
+            </div>
+
+            <!-- Resumen Automático de Cálculo -->
+            <div class="calculation-box">
+              <div class="calc-line">
+                <span>Costo Total del Lote (Base + Envío):</span>
+                <strong id="displayCalcTotalLot">$0.00 USD</strong>
+              </div>
+              <div class="calc-line highlight">
+                <span>Costo Real Unitario por Pieza:</span>
+                <strong id="displayCalcUnitCost">$0.00 USD</strong>
+              </div>
+            </div>
+
+            <button type="submit" id="btnSaveLot" class="btn-primary">
+              💾 Guardar Lote en Firestore
+            </button>
+          </form>
+        </div>
+
+        <!-- Historial de Lotes Registrados -->
+        <div class="card">
+          <h3 class="card-title">📋 Lotes Históricos Registrados</h3>
+          <p class="card-subtitle">Seguimiento de compras, inversión total y recuperación de costo</p>
+          <div id="lotsHistoryList">
+            <div class="empty-placeholder">
+              <div class="icon">📦</div>
+              <p>Cargando lotes registrados...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================================
+           PESTAÑA 3: REGISTRAR Y CONSULTAR VENTAS
+           ====================================================================== -->
+      <section id="tab-ventas" class="tab-content">
+        <!-- Módulo A: Formulario de Nueva Venta -->
+        <div class="card">
+          <h3 class="card-title">🛍️ Registrar Nueva Venta</h3>
+          <p class="card-subtitle">Registra salidas y descuenta automáticamente el inventario</p>
+
+          <form id="formNewSale" onsubmit="handleSaveSale(event)">
+            <div class="form-group">
+              <label for="saleProductSelect">Producto / Lote de Origen *</label>
+              <select id="saleProductSelect" class="form-control" onchange="handleSaleProductChange()" required>
+                <option value="">Selecciona un producto o lote...</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="saleQty">Cantidad Vendida *</label>
+                <input type="number" id="saleQty" class="form-control" min="1" value="1" oninput="calculateSaleTotals()" required>
+              </div>
+
+              <div class="form-group">
+                <label for="salePriceUSD">Precio Unitario ($) *</label>
+                <input type="number" step="0.01" id="salePriceUSD" class="form-control" placeholder="0.00" oninput="calculateSaleTotals()" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="saleChannel">Canal de Venta *</label>
+              <select id="saleChannel" class="form-control" required>
+                <option value="Personal / Directo">Personal / Directo</option>
+                <option value="Instagram (@Ameliaccsrs_shop)">Instagram (@Ameliaccsrs_shop)</option>
+                <option value="Grupos de WhatsApp">Grupos de WhatsApp</option>
+                <option value="TikTok">TikTok</option>
+                <option value="Landing Page / Web">Landing Page / Web</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="saleNotes">Notas Adicionales (Opcional)</label>
+              <input type="text" id="saleNotes" class="form-control" placeholder="Ej: Cliente Amelia amiga, pagó en efectivo">
+            </div>
+
+            <!-- Resumen de la Venta en Tiempo Real -->
+            <div class="calculation-box">
+              <div class="calc-line">
+                <span>Total de la Venta (USD):</span>
+                <strong id="displaySaleTotalUSD">$0.00 USD</strong>
+              </div>
+              <div class="calc-line">
+                <span>Equivalente en Bolívares:</span>
+                <strong id="displaySaleTotalBs">≈ 0.00 Bs.</strong>
+              </div>
+              <div class="calc-line highlight">
+                <span>Ganancia Neta Estimada:</span>
+                <strong id="displaySaleNetProfit" class="net-profit-val">$0.00 USD</strong>
+              </div>
+            </div>
+
+            <button type="submit" id="btnSaveSale" class="btn-primary">
+              ✓ Registrar Venta
+            </button>
+          </form>
+        </div>
+
+        <!-- Módulo B: Historial de Ventas con Paginación Estricta -->
+        <div class="card">
+          <h3 class="card-title">🧾 Historial de Ventas Registradas</h3>
+          <p class="card-subtitle">Detalle de operaciones con paginación de 15 ítems por página</p>
+
+          <div id="salesHistoryList">
+            <div class="empty-placeholder">
+              <div class="icon">🧾</div>
+              <p>Cargando historial de ventas...</p>
+            </div>
+          </div>
+
+          <!-- Paginador Estricto -->
+          <div class="pagination-bar" id="salesPaginationBar" style="display: none;">
+            <button class="btn-pagination" id="btnPrevPage" onclick="changeSalesPage(-1)">
+              ◀ Anterior
+            </button>
+            <span class="pagination-info" id="paginationPageIndicator">Página 1 de 1</span>
+            <button class="btn-pagination" id="btnNextPage" onclick="changeSalesPage(1)">
+              Siguiente ▶
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================================
+           PESTAÑA 4: INVENTARIO Y CONTROL DE STOCK (STOCK CHECKER)
+           ====================================================================== -->
+      <section id="tab-stock" class="tab-content">
+        <!-- Barra de Búsqueda -->
+        <div class="form-group">
+          <input 
+            type="search" 
+            id="stockSearchInput" 
+            class="form-control" 
+            placeholder="🔍 Buscar por código, nombre o tipo..."
+            oninput="handleStockSearch(this.value)"
+          >
+        </div>
+
+        <!-- Filtros Rápidos -->
+        <div class="stock-filters-bar">
+          <button class="stock-filter-pill active" data-filter="all" onclick="applyStockFilter('all')">Todos</button>
+          <button class="stock-filter-pill" data-filter="in_stock" onclick="applyStockFilter('in_stock')">En Stock</button>
+          <button class="stock-filter-pill" data-filter="low_stock" onclick="applyStockFilter('low_stock')">Stock Bajo (&lt;3)</button>
+          <button class="stock-filter-pill" data-filter="out_of_stock" onclick="applyStockFilter('out_of_stock')">Agotados</button>
+        </div>
+
+        <!-- Lista de Tarjetas de Stock -->
+        <div id="stockCardsContainer">
+          <div class="empty-placeholder">
+            <div class="icon">🔍</div>
+            <p>Conectando con el inventario...</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- BARRA DE NAVEGACIÓN FIJA INFERIOR (TABS MOBILE) -->
+    <nav class="nav-tabs-bar">
+      <button class="nav-tab-btn active" data-tab="tab-dashboard" onclick="switchTab('tab-dashboard')">
+        <span class="tab-icon">📊</span>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-tab-btn" data-tab="tab-lotes" onclick="switchTab('tab-lotes')">
+        <span class="tab-icon">📦</span>
+        <span>Lotes</span>
+      </button>
+      <button class="nav-tab-btn" data-tab="tab-ventas" onclick="switchTab('tab-ventas')">
+        <span class="tab-icon">🛍️</span>
+        <span>Ventas</span>
+      </button>
+      <button class="nav-tab-btn" data-tab="tab-stock" onclick="switchTab('tab-stock')">
+        <span class="tab-icon">🏷️</span>
+        <span>Stock</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Toast Notificaciones -->
+  <div id="toastNotification">
+    <span id="toastMessage">Operación exitosa</span>
+  </div>
+
+  <!-- Firebase JS SDK Modular v10.12.0 -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { 
+      getAuth, 
+      signInWithPopup, 
+      GoogleAuthProvider, 
+      signOut, 
+      onAuthStateChanged,
+      setPersistence,
+      browserLocalPersistence
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { 
+      getFirestore, 
+      collection, 
+      doc, 
+      onSnapshot, 
+      setDoc,
+      addDoc,
+      updateDoc,
+      increment
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // Configuración oficial Firebase de AMELIA Accesorios
+    const firebaseConfig = {
+      apiKey: "AIzaSyA6lB2oPFk35uy9YyKf1_-uBuZMT19eVzo",
+      authDomain: "controldeventas-c6664.firebaseapp.com",
+      projectId: "controldeventas-c6664",
+      storageBucket: "controldeventas-c6664.firebasestorage.app",
+      messagingSenderId: "299201673786",
+      appId: "1:299201673786:web:c033da42c1c4071ad25303"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    try {
+      setPersistence(auth, browserLocalPersistence).catch(console.warn);
+    } catch(e) {
+      console.warn("Persistencia Auth:", e);
+    }
+
+    // 2. LISTA BLANCA ESTRICTA (WHITELIST)
+    const ALLOWED_EMAILS = [
+      "jesustbot@gmail.com",
+      "ameliamontillag@gmail.com"
+    ];
+
+    // ESTADO DE LA APLICACIÓN
+    let currentExchangeRate = 877.00;
+    let lotesData = [];      // Colección 'lotes'
+    let salesData = [];      // Colección 'ventas' (y 'sales' si existen previas)
+    let modelsData = [];     // Colección 'models' para stock unificado
+    let inventoryMap = {};   // Colección 'inventory'
+    let currentStockFilter = 'all';
+    let stockSearchQuery = '';
+    let currentSalesPage = 1;
+    const SALES_PER_PAGE = 15;
+    let syncUnsubscribes = [];
+    let isRealtimeActive = false;
+
+    // Toast flotante
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      const msgElem = document.getElementById('toastMessage');
+      if (!toast || !msgElem) return;
+      msgElem.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2600);
+    }
+
+    // Alerta Login
+    function showLoginAlert(msg, type = 'error') {
+      const el = document.getElementById('loginAlert');
+      if (!el) return;
+      el.textContent = msg;
+      el.className = `login-alert ${type}`;
+      el.style.display = 'block';
+    }
+
+    function clearLoginAlert() {
+      const el = document.getElementById('loginAlert');
+      if (el) el.style.display = 'none';
+    }
+
+    // AUTENTICACIÓN GOOGLE
+    async function handleGoogleSignIn() {
+      clearLoginAlert();
+      const btn = document.getElementById('btnGoogleLogin');
+      const txt = document.getElementById('btnGoogleText');
+      if (btn) btn.disabled = true;
+      if (txt) txt.textContent = 'Abriendo Google...';
+
+      try {
+        const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+        const result = await signInWithPopup(auth, provider);
+        const signedEmail = (result.user.email || '').toLowerCase().trim();
+
+        if (!ALLOWED_EMAILS.includes(signedEmail)) {
+          await signOut(auth);
+          stopRealtimeSync();
+          showLoginAlert('Acceso denegado. Este correo no está autorizado.', 'error');
+          return;
+        }
+
+        showToast(`✓ Bienvenida, ${result.user.displayName || signedEmail}`);
+      } catch (err) {
+        console.error("Error Auth:", err);
+        if (err.code === 'auth/popup-closed-by-user') {
+          showLoginAlert('Se canceló la ventana de inicio con Google.', 'info');
+        } else if (err.code === 'auth/popup-blocked') {
+          showLoginAlert('El navegador bloqueó la ventana emergente. Por favor permítela para continuar.', 'error');
+        } else {
+          showLoginAlert(`Error de autenticación: ${err.message}`, 'error');
+        }
+      } finally {
+        if (btn) btn.disabled = false;
+        if (txt) txt.textContent = 'Continuar con Google';
+      }
+    }
+
+    async function handleLogout() {
+      if (!confirm('¿Deseas cerrar la sesión en AMELIA Accesorios?')) return;
+      try {
+        await signOut(auth);
+        stopRealtimeSync();
+        showToast('Sesión finalizada');
+      } catch (err) {
+        console.error("Error logout:", err);
+      }
+    }
+
+    // GESTIÓN DE PESTAÑAS (SPA)
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => {
+        el.classList.toggle('active', el.id === tabId);
+      });
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabId);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ESCUCHA DE AUTENTICACIÓN
+    function setupAuthListener() {
+      onAuthStateChanged(auth, async (user) => {
+        const loginScreen = document.getElementById('loginScreen');
+        const appInterface = document.getElementById('appInterface');
+        const userBadge = document.getElementById('userEmailBadge');
+
+        if (user) {
+          const userEmail = (user.email || '').toLowerCase().trim();
+          if (!ALLOWED_EMAILS.includes(userEmail)) {
+            await signOut(auth);
+            stopRealtimeSync();
+            if (loginScreen) loginScreen.style.display = 'flex';
+            if (appInterface) appInterface.style.display = 'none';
+            showLoginAlert('⚠️ Acceso denegado. Correo no registrado en la lista blanca.', 'error');
+            return;
+          }
+
+          if (loginScreen) loginScreen.style.display = 'none';
+          if (appInterface) appInterface.style.display = 'flex';
+          if (userBadge) userBadge.textContent = userEmail;
+
+          // Asignar fecha de hoy al formulario de lotes
+          const dateInput = document.getElementById('lotDate');
+          if (dateInput && !dateInput.value) {
+            dateInput.value = new Date().toISOString().split('T')[0];
+          }
+
+          if (!isRealtimeActive) {
+            isRealtimeActive = true;
+            initRealtimeSync();
+          }
+        } else {
+          stopRealtimeSync();
+          if (loginScreen) loginScreen.style.display = 'flex';
+          if (appInterface) appInterface.style.display = 'none';
+        }
+      });
+    }
+
+    function stopRealtimeSync() {
+      syncUnsubscribes.forEach(unsub => {
+        try { unsub(); } catch(e) {}
+      });
+      syncUnsubscribes = [];
+      isRealtimeActive = false;
+    }
+
+    // 4. CONEXIÓN A FIRESTORE EN TIEMPO REAL (onSnapshot)
+    function initRealtimeSync() {
+      stopRealtimeSync();
+
+      // Oyente 1: Tasa del día (configuración y settings global)
+      const unsubConfig = onSnapshot(doc(db, "configuracion", "tasa"), (docSnap) => {
+        if (docSnap.exists() && docSnap.data().tasa) {
+          currentExchangeRate = parseFloat(docSnap.data().tasa);
+          updateExchangeRateDisplay();
+        } else {
+          // Fallback a 'settings/global' existente en la BD
+          onSnapshot(doc(db, "settings", "global"), (snapGlobal) => {
+            if (snapGlobal.exists() && snapGlobal.data().exchangeRate) {
+              currentExchangeRate = parseFloat(snapGlobal.data().exchangeRate);
+              updateExchangeRateDisplay();
+            }
+          });
+        }
+      }, err => console.warn("Snapshot configuracion/tasa:", err));
+      syncUnsubscribes.push(unsubConfig);
+
+      // Oyente 2: Lotes (lotes y lots)
+      const unsubLotes = onSnapshot(collection(db, "lotes"), (snapshot) => {
+        const list = [];
+        snapshot.forEach(docSnap => {
+          list.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        lotesData = list;
+        updateDashboardKPIs();
+        renderLotsHistory();
+        populateSaleProductSelect();
+        renderStockList();
+      }, err => console.error("Snapshot lotes:", err));
+      syncUnsubscribes.push(unsubLotes);
+
+      // Oyente 3: Ventas (ventas y sales)
+      const unsubVentas = onSnapshot(collection(db, "ventas"), (snapshot) => {
+        const list = [];
+        snapshot.forEach(docSnap => {
+          list.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        // Si la coleccion ventas tiene datos, la usamos, sino nos apoyamos en sales
+        salesData = list;
+        updateDashboardKPIs();
+        renderSalesHistory();
+        renderStockList();
+      }, err => console.error("Snapshot ventas:", err));
+      syncUnsubscribes.push(unsubVentas);
+
+      // Oyente 4: Models (para stock integrado de piezas)
+      const unsubModels = onSnapshot(collection(db, "models"), (snapshot) => {
+        const list = [];
+        snapshot.forEach(docSnap => {
+          list.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        modelsData = list;
+        updateDashboardKPIs();
+        populateSaleProductSelect();
+        renderStockList();
+      }, err => console.error("Snapshot models:", err));
+      syncUnsubscribes.push(unsubModels);
+
+      // Oyente 5: Colección 'inventory'
+      const unsubInventory = onSnapshot(collection(db, "inventory"), (snapshot) => {
+        inventoryMap = {};
+        snapshot.forEach(docSnap => {
+          inventoryMap[docSnap.id] = docSnap.data();
+        });
+        updateDashboardKPIs();
+        renderStockList();
+      }, err => console.warn("Snapshot inventory:", err));
+      syncUnsubscribes.push(unsubInventory);
+    }
+
+    // ACTUALIZACIÓN DE TASA DEL DÍA
+    function updateExchangeRateDisplay() {
+      const display = document.getElementById('displayExchangeRate');
+      const input = document.getElementById('inputNewExchangeRate');
+      if (display) {
+        display.textContent = `1 USD = ${currentExchangeRate.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs.`;
+      }
+      if (input && !input.value) {
+        input.value = currentExchangeRate;
+      }
+      updateDashboardKPIs();
+      renderLotsHistory();
+      renderStockList();
+      calculateSaleTotals();
+    }
+
+    async function updateExchangeRate() {
+      const input = document.getElementById('inputNewExchangeRate');
+      if (!input) return;
+      const val = parseFloat(input.value);
+      if (isNaN(val) || val <= 0) {
+        showToast("⚠️ Ingresa una tasa válida en Bs.");
+        return;
+      }
+
+      try {
+        currentExchangeRate = val;
+        // Guardamos tanto en 'configuracion/tasa' como en 'settings/global' para compatibilidad total
+        await setDoc(doc(db, "configuracion", "tasa"), {
+          tasa: val,
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+
+        await setDoc(doc(db, "settings", "global"), {
+          exchangeRate: val,
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+
+        showToast("✓ Tasa oficial actualizada");
+        updateExchangeRateDisplay();
+      } catch (err) {
+        console.error("Error al guardar tasa:", err);
+        showToast("❌ Error al guardar tasa en Firebase");
+      }
+    }
+
+    // ==========================================================================
+    // PESTAÑA 1: DASHBOARD / KPIS Y GRÁFICO POR CANAL
+    // ==========================================================================
+    function updateDashboardKPIs() {
+      // 1. Capital Invertido Total (Sumatoria costo total de lotes)
+      let capitalTotalUSD = 0;
+      lotesData.forEach(l => {
+        const cost = Number(l.totalCost) || (Number(l.baseCost || 0) + Number(l.shippingCost || 0));
+        capitalTotalUSD += cost;
+      });
+
+      // 2. Ganancia Bruta Recuperada (Total recaudado en ventas)
+      let grossRevenueUSD = 0;
+      let totalPiecesSold = 0;
+      const channelCounts = {};
+
+      salesData.forEach(s => {
+        const qty = Number(s.quantity || s.qty) || 1;
+        const price = Number(s.priceUSD || s.price) || 0;
+        grossRevenueUSD += (qty * price);
+        totalPiecesSold += qty;
+
+        const ch = s.channel || s.canal || "Otro";
+        channelCounts[ch] = (channelCounts[ch] || 0) + qty;
+      });
+
+      // 3. Piezas Disponibles vs Agotadas
+      let availablePieces = 0;
+      let availableItemsCount = 0;
+      let outOfStockItemsCount = 0;
+
+      // Combinamos lotes y modelos para inventario general
+      const combinedItems = getCombinedInventoryList();
+      combinedItems.forEach(item => {
+        const stk = item.stock;
+        if (stk > 0) {
+          availablePieces += stk;
+          availableItemsCount++;
+        } else {
+          outOfStockItemsCount++;
+        }
+      });
+
+      // Render KPIs
+      const elCapitalUSD = document.getElementById('kpiCapitalInvestedUSD');
+      const elCapitalBs = document.getElementById('kpiCapitalInvestedBs');
+      const elGrossUSD = document.getElementById('kpiGrossRevenueUSD');
+      const elGrossBs = document.getElementById('kpiGrossRevenueBs');
+      const elSalesCount = document.getElementById('kpiTotalSalesCount');
+      const elPiecesSold = document.getElementById('kpiPiecesSoldCount');
+      const elStockRatio = document.getElementById('kpiStockRatio');
+      const elStockText = document.getElementById('kpiStockStatusText');
+
+      if (elCapitalUSD) elCapitalUSD.textContent = `$${capitalTotalUSD.toFixed(2)}`;
+      if (elCapitalBs) elCapitalBs.textContent = `≈ ${(capitalTotalUSD * currentExchangeRate).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs.`;
+
+      if (elGrossUSD) elGrossUSD.textContent = `$${grossRevenueUSD.toFixed(2)}`;
+      if (elGrossBs) elGrossBs.textContent = `≈ ${(grossRevenueUSD * currentExchangeRate).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs.`;
+
+      if (elSalesCount) elSalesCount.textContent = salesData.length;
+      if (elPiecesSold) elPiecesSold.textContent = `${totalPiecesSold} piezas vendidas`;
+
+      if (elStockRatio) elStockRatio.textContent = `${availableItemsCount} disp. / ${outOfStockItemsCount} agot.`;
+      if (elStockText) elStockText.textContent = `${availablePieces} unidades en stock`;
+
+      // Desglose por Canal
+      renderChannelsBreakdown(channelCounts, totalPiecesSold);
+    }
+
+    function renderChannelsBreakdown(channelCounts, totalPiecesSold) {
+      const container = document.getElementById('channelsBreakdownContainer');
+      if (!container) return;
+
+      const channels = Object.keys(channelCounts);
+      if (channels.length === 0 || totalPiecesSold === 0) {
+        container.innerHTML = `
+          <div class="empty-placeholder">
+            <div class="icon">📈</div>
+            <p>No hay ventas registradas aún para calcular porcentajes.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Ordenar por mayor volumen
+      channels.sort((a, b) => channelCounts[b] - channelCounts[a]);
+
+      container.innerHTML = channels.map(ch => {
+        const count = channelCounts[ch];
+        const pct = ((count / totalPiecesSold) * 100).toFixed(1);
+        return `
+          <div class="channel-row">
+            <div class="channel-header">
+              <span><strong>${escapeHTML(ch)}</strong>: ${count} ${count === 1 ? 'pieza' : 'piezas'}</span>
+              <span>${pct}%</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" style="width: ${pct}%;"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ==========================================================================
+    // PESTAÑA 2: GESTIÓN DE COMPRAS Y LOTES (ENTRADAS DE MERCANCÍA)
+    // ==========================================================================
+    function calculateLotTotals() {
+      const baseCost = parseFloat(document.getElementById('lotBaseCost').value) || 0;
+      const shippingCost = parseFloat(document.getElementById('lotShippingCost').value) || 0;
+      const pieces = parseInt(document.getElementById('lotPieces').value) || 0;
+
+      const totalCost = baseCost + shippingCost;
+      const unitCost = pieces > 0 ? (totalCost / pieces) : 0;
+
+      const elTotal = document.getElementById('displayCalcTotalLot');
+      const elUnit = document.getElementById('displayCalcUnitCost');
+
+      if (elTotal) elTotal.textContent = `$${totalCost.toFixed(2)} USD`;
+      if (elUnit) elUnit.textContent = `$${unitCost.toFixed(2)} USD`;
+
+      return { totalCost, unitCost, baseCost, shippingCost, pieces };
+    }
+
+    async function handleSaveLot(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSaveLot');
+      const calcs = calculateLotTotals();
+
+      if (calcs.pieces <= 0) {
+        showToast("⚠️ La cantidad de piezas debe ser mayor a 0");
+        return;
+      }
+
+      const type = document.getElementById('lotType').value;
+      const name = document.getElementById('lotName').value.trim();
+      const date = document.getElementById('lotDate').value;
+      const salePrice = parseFloat(document.getElementById('lotSalePrice').value) || 5.00;
+
+      if (!name) {
+        showToast("⚠️ Ingresa el nombre o código del lote");
+        return;
+      }
+
+      if (btn) btn.disabled = true;
+
+      try {
+        const lotData = {
+          type,
+          name,
+          date: date || new Date().toISOString().split('T')[0],
+          baseCost: calcs.baseCost,
+          shippingCost: calcs.shippingCost,
+          totalCost: calcs.totalCost,
+          piecesReceived: calcs.pieces,
+          currentStock: calcs.pieces, // Inicialmente stock = piezas recibidas
+          unitCost: calcs.unitCost,
+          suggestedPriceUSD: salePrice,
+          createdAt: new Date().toISOString()
+        };
+
+        // Guardar lote en Firestore (Colección 'lotes')
+        const docRef = await addDoc(collection(db, "lotes"), lotData);
+
+        // Crear también un modelo correspondiente en 'models' para compatibilidad
+        await setDoc(doc(db, "models", docRef.id), {
+          name: name,
+          type: type,
+          lotId: name,
+          price: salePrice,
+          stock: calcs.pieces,
+          unitCost: calcs.unitCost,
+          updatedAt: new Date().toISOString()
+        });
+
+        showToast("✓ Lote guardado con éxito en Firestore");
+        document.getElementById('formNewLot').reset();
+        document.getElementById('lotDate').value = new Date().toISOString().split('T')[0];
+        calculateLotTotals();
+      } catch (err) {
+        console.error("Error al guardar lote:", err);
+        showToast("❌ Error al guardar lote en Firebase");
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    function renderLotsHistory() {
+      const container = document.getElementById('lotsHistoryList');
+      if (!container) return;
+
+      if (lotesData.length === 0) {
+        container.innerHTML = `
+          <div class="empty-placeholder">
+            <div class="icon">📦</div>
+            <p>No se han registrado compras de lotes aún.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Ordenar por fecha reciente
+      const sorted = [...lotesData].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+      container.innerHTML = sorted.map(lot => {
+        const totalCost = Number(lot.totalCost) || ((Number(lot.baseCost) || 0) + (Number(lot.shippingCost) || 0));
+        const unitCost = Number(lot.unitCost) || (lot.piecesReceived > 0 ? totalCost / lot.piecesReceived : 0);
+        const pieces = Number(lot.piecesReceived) || 0;
+        const currentStk = lot.currentStock !== undefined ? Number(lot.currentStock) : pieces;
+
+        // Calcular ventas asociadas a este lote si existen
+        const soldCount = salesData
+          .filter(s => (s.lotId === lot.id) || (s.productName === lot.name) || (s.lotName === lot.name))
+          .reduce((acc, curr) => acc + (Number(curr.quantity || curr.qty) || 0), 0);
+
+        const recoveredUSD = salesData
+          .filter(s => (s.lotId === lot.id) || (s.productName === lot.name) || (s.lotName === lot.name))
+          .reduce((acc, curr) => acc + ((Number(curr.quantity || curr.qty) || 0) * (Number(curr.priceUSD || curr.price) || 0)), 0);
+
+        return `
+          <div class="history-card-item">
+            <div class="history-item-top">
+              <div>
+                <span class="badge badge-channel">${escapeHTML(lot.type || 'Zarcillos')}</span>
+                <div class="history-item-title" style="margin-top:4px;">${escapeHTML(lot.name || 'Sin nombre')}</div>
+                <div class="history-item-date">📅 Compra: ${lot.date || 'N/A'}</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size:1rem; font-weight:800; color:var(--marron-oscuro);">$${totalCost.toFixed(2)} USD</div>
+                <div style="font-size:0.75rem; color:var(--marron-medio);">Unit: $${unitCost.toFixed(2)}/pz</div>
+              </div>
+            </div>
+
+            <div class="history-item-details">
+              <div>
+                <span>📦 ${pieces} piezas (${currentStk} disp. / ${soldCount} vendidas)</span>
+              </div>
+              <div>
+                <span>Recuperado: <strong>$${recoveredUSD.toFixed(2)}</strong></span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ==========================================================================
+    // PESTAÑA 3: REGISTRAR Y CONSULTAR VENTAS
+    // ==========================================================================
+    function populateSaleProductSelect() {
+      const select = document.getElementById('saleProductSelect');
+      if (!select) return;
+
+      const currentVal = select.value;
+      const combined = getCombinedInventoryList();
+
+      select.innerHTML = '<option value="">Selecciona un producto o lote...</option>' +
+        combined.map(item => {
+          return `<option value="${escapeHTML(item.id)}" data-unitcost="${item.unitCost || 0}" data-price="${item.price || 5.0}" data-stock="${item.stock}" data-name="${escapeHTML(item.name)}">
+            ${escapeHTML(item.name)} (Stock: ${item.stock}) - $${Number(item.price || 5.0).toFixed(2)}
+          </option>`;
+        }).join('');
+
+      if (currentVal) {
+        select.value = currentVal;
+      }
+    }
+
+    function handleSaleProductChange() {
+      const select = document.getElementById('saleProductSelect');
+      const selectedOption = select.options[select.selectedIndex];
+      if (!selectedOption || !selectedOption.value) return;
+
+      const price = selectedOption.getAttribute('data-price');
+      if (price) {
+        document.getElementById('salePriceUSD').value = parseFloat(price).toFixed(2);
+      }
+      calculateSaleTotals();
+    }
+
+    function calculateSaleTotals() {
+      const qty = parseInt(document.getElementById('saleQty').value) || 0;
+      const priceUSD = parseFloat(document.getElementById('salePriceUSD').value) || 0;
+      const select = document.getElementById('saleProductSelect');
+      const selectedOption = select ? select.options[select.selectedIndex] : null;
+
+      const unitCost = selectedOption ? (parseFloat(selectedOption.getAttribute('data-unitcost')) || 0) : 0;
+
+      const totalUSD = qty * priceUSD;
+      const totalBs = totalUSD * currentExchangeRate;
+      const netProfitUSD = totalUSD - (qty * unitCost);
+
+      const elTotalUSD = document.getElementById('displaySaleTotalUSD');
+      const elTotalBs = document.getElementById('displaySaleTotalBs');
+      const elNetProfit = document.getElementById('displaySaleNetProfit');
+
+      if (elTotalUSD) elTotalUSD.textContent = `$${totalUSD.toFixed(2)} USD`;
+      if (elTotalBs) elTotalBs.textContent = `≈ ${totalBs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs.`;
+      if (elNetProfit) elNetProfit.textContent = `$${netProfitUSD.toFixed(2)} USD`;
+
+      return { qty, priceUSD, totalUSD, totalBs, netProfitUSD, unitCost };
+    }
+
+    async function handleSaveSale(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSaveSale');
+      const select = document.getElementById('saleProductSelect');
+      const selectedOption = select.options[select.selectedIndex];
+
+      if (!selectedOption || !selectedOption.value) {
+        showToast("⚠️ Selecciona el producto o lote vendido");
+        return;
+      }
+
+      const calcs = calculateSaleTotals();
+      if (calcs.qty <= 0) {
+        showToast("⚠️ La cantidad debe ser mayor a 0");
+        return;
+      }
+
+      const availableStock = parseInt(selectedOption.getAttribute('data-stock')) || 0;
+      if (availableStock < calcs.qty) {
+        if (!confirm(`⚠️ El stock actual es de ${availableStock} unidades. ¿Deseas registrar la venta de ${calcs.qty} piezas de todas formas?`)) {
+          return;
+        }
+      }
+
+      const productId = selectedOption.value;
+      const productName = selectedOption.getAttribute('data-name');
+      const channel = document.getElementById('saleChannel').value;
+      const notes = document.getElementById('saleNotes').value.trim();
+
+      if (btn) btn.disabled = true;
+
+      try {
+        const saleRecord = {
+          productId,
+          productName,
+          quantity: calcs.qty,
+          priceUSD: calcs.priceUSD,
+          totalUSD: calcs.totalUSD,
+          totalBs: calcs.totalBs,
+          netProfitUSD: calcs.netProfitUSD,
+          unitCost: calcs.unitCost,
+          channel: channel,
+          notes: notes,
+          date: new Date().toISOString(),
+          dateDisplay: new Date().toLocaleDateString('es-VE', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+        };
+
+        // 1. Guardar en Firestore colección 'ventas'
+        await addDoc(collection(db, "ventas"), saleRecord);
+
+        // 2. Descontar stock del producto/lote en Firestore automáticamente
+        await applyStockDecrement(productId, calcs.qty);
+
+        showToast("✓ Venta registrada y stock descontado");
+        document.getElementById('formNewSale').reset();
+        document.getElementById('saleQty').value = 1;
+        calculateSaleTotals();
+      } catch (err) {
+        console.error("Error al registrar venta:", err);
+        showToast("❌ Error al guardar venta en Firebase");
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    async function applyStockDecrement(itemId, qtyToDeduct) {
+      // Si existe en 'lotes'
+      const lot = lotesData.find(l => l.id === itemId);
+      if (lot) {
+        const currentStk = lot.currentStock !== undefined ? Number(lot.currentStock) : (Number(lot.piecesReceived) || 0);
+        const newStk = Math.max(0, currentStk - qtyToDeduct);
+        await updateDoc(doc(db, "lotes", itemId), {
+          currentStock: newStk,
+          updatedAt: new Date().toISOString()
+        }).catch(err => console.warn("Update lote stock:", err));
+      }
+
+      // Si existe en 'models'
+      const model = modelsData.find(m => m.id === itemId);
+      if (model) {
+        const currentStk = getModelStock(model);
+        const newStk = Math.max(0, currentStk - qtyToDeduct);
+        await setDoc(doc(db, "models", itemId), {
+          stock: newStk,
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+
+        await setDoc(doc(db, "inventory", itemId), {
+          stock: newStk,
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+      }
+    }
+
+    // HISTORIAL DE VENTAS CON PAGINACIÓN STRICTA (15 ÍTEMS/PÁGINA)
+    function renderSalesHistory() {
+      const container = document.getElementById('salesHistoryList');
+      const paginationBar = document.getElementById('salesPaginationBar');
+      const pageIndicator = document.getElementById('paginationPageIndicator');
+      const btnPrev = document.getElementById('btnPrevPage');
+      const btnNext = document.getElementById('btnNextPage');
+
+      if (!container) return;
+
+      if (salesData.length === 0) {
+        container.innerHTML = `
+          <div class="empty-placeholder">
+            <div class="icon">🧾</div>
+            <p>No se han registrado ventas aún.</p>
+          </div>
+        `;
+        if (paginationBar) paginationBar.style.display = 'none';
+        return;
+      }
+
+      // Ordenar por fecha descendente
+      const sorted = [...salesData].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+      const totalItems = sorted.length;
+      const totalPages = Math.ceil(totalItems / SALES_PER_PAGE) || 1;
+
+      if (currentSalesPage > totalPages) currentSalesPage = totalPages;
+      if (currentSalesPage < 1) currentSalesPage = 1;
+
+      const startIndex = (currentSalesPage - 1) * SALES_PER_PAGE;
+      const pageItems = sorted.slice(startIndex, startIndex + SALES_PER_PAGE);
+
+      container.innerHTML = pageItems.map(s => {
+        const qty = Number(s.quantity || s.qty) || 1;
+        const priceUSD = Number(s.priceUSD || s.price) || 0;
+        const totalUSD = Number(s.totalUSD) || (qty * priceUSD);
+        const profit = s.netProfitUSD !== undefined ? Number(s.netProfitUSD) : (totalUSD * 0.5); // Fallback razonable
+        const channelName = s.channel || s.canal || 'Directo';
+        const dateStr = s.dateDisplay || (s.date ? new Date(s.date).toLocaleDateString('es-VE') : 'Reciente');
+
+        return `
+          <div class="history-card-item">
+            <div class="history-item-top">
+              <div>
+                <span class="badge badge-channel">${escapeHTML(channelName)}</span>
+                <div class="history-item-title" style="margin-top:4px;">${escapeHTML(s.productName || s.model || 'Venta de accesorio')}</div>
+                <div class="history-item-date">📅 ${dateStr}</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size:1.05rem; font-weight:800; color:var(--marron-oscuro);">$${totalUSD.toFixed(2)} USD</div>
+                <div style="font-size:0.75rem; color:var(--marron-medio);">≈ ${(totalUSD * currentExchangeRate).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs.</div>
+              </div>
+            </div>
+
+            <div class="history-item-details">
+              <div>
+                <span>📦 ${qty} ${qty === 1 ? 'pieza' : 'piezas'} ($${priceUSD.toFixed(2)} c/u)</span>
+                ${s.notes ? `<div style="font-size:0.72rem; color:var(--marron-medio); font-style:italic;">Nota: ${escapeHTML(s.notes)}</div>` : ''}
+              </div>
+              <div>
+                <span>Ganancia neta: <strong class="net-profit-val">+$${profit.toFixed(2)}</strong></span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Barra de paginación
+      if (paginationBar) {
+        paginationBar.style.display = 'flex';
+        pageIndicator.textContent = `Página ${currentSalesPage} de ${totalPages}`;
+        btnPrev.disabled = (currentSalesPage <= 1);
+        btnNext.disabled = (currentSalesPage >= totalPages);
+      }
+    }
+
+    function changeSalesPage(delta) {
+      currentSalesPage += delta;
+      renderSalesHistory();
+    }
+
+    // ==========================================================================
+    // PESTAÑA 4: INVENTARIO Y CONTROL DE STOCK (STOCK CHECKER)
+    // ==========================================================================
+    function getCombinedInventoryList() {
+      const items = [];
+      const seenIds = new Set();
+
+      // 1. Modelos individuales
+      modelsData.forEach(m => {
+        const stk = getModelStock(m);
+        items.push({
+          id: m.id,
+          name: m.name || m.id,
+          type: m.type || 'Zarcillos',
+          price: Number(m.price) || 5.0,
+          stock: stk,
+          unitCost: Number(m.unitCost) || 0,
+          isModel: true
+        });
+        seenIds.add(m.id);
+      });
+
+      // 2. Lotes registrados
+      lotesData.forEach(l => {
+        if (!seenIds.has(l.id)) {
+          const stk = l.currentStock !== undefined ? Number(l.currentStock) : (Number(l.piecesReceived) || 0);
+          items.push({
+            id: l.id,
+            name: l.name || 'Lote sin nombre',
+            type: l.type || 'Zarcillos',
+            price: Number(l.suggestedPriceUSD) || 5.0,
+            stock: stk,
+            unitCost: Number(l.unitCost) || 0,
+            isLot: true
+          });
+        }
+      });
+
+      return items;
+    }
+
+    function getModelStock(model) {
+      if (inventoryMap[model.id] && inventoryMap[model.id].stock !== undefined) {
+        return Math.max(0, parseInt(inventoryMap[model.id].stock) || 0);
+      }
+      if (model.stock !== undefined) {
+        return Math.max(0, parseInt(model.stock) || 0);
+      }
+      return 0;
+    }
+
+    function handleStockSearch(val) {
+      stockSearchQuery = (val || '').toLowerCase().trim();
+      renderStockList();
+    }
+
+    function applyStockFilter(filterType) {
+      currentStockFilter = filterType;
+      document.querySelectorAll('.stock-filter-pill').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.filter === filterType);
+      });
+      renderStockList();
+    }
+
+    function renderStockList() {
+      const container = document.getElementById('stockCardsContainer');
+      if (!container) return;
+
+      const items = getCombinedInventoryList();
+
+      // Filtrar por término de búsqueda
+      let filtered = items.filter(item => {
+        if (stockSearchQuery) {
+          const text = `${item.name} ${item.type} ${item.id}`.toLowerCase();
+          if (!text.includes(stockSearchQuery)) return false;
+        }
+
+        if (currentStockFilter === 'in_stock') {
+          return item.stock > 0;
+        }
+        if (currentStockFilter === 'low_stock') {
+          return item.stock > 0 && item.stock < 3;
+        }
+        if (currentStockFilter === 'out_of_stock') {
+          return item.stock === 0;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-placeholder">
+            <div class="icon">🔍</div>
+            <p>No se encontraron artículos con el criterio seleccionado.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => {
+        let badgeClass = 'badge-stock-disponible';
+        let badgeText = `🟢 Disponible (${item.stock} pz)`;
+        if (item.stock === 0) {
+          badgeClass = 'badge-stock-agotado';
+          badgeText = `🔴 Agotado (0 pz)`;
+        } else if (item.stock < 3) {
+          badgeClass = 'badge-stock-bajo';
+          badgeText = `🟡 Últimas unidades (${item.stock} pz)`;
+        }
+
+        const priceUSD = item.price || 5.0;
+        const priceBs = priceUSD * currentExchangeRate;
+
+        return `
+          <article class="product-stock-card">
+            <div class="product-stock-header">
+              <div>
+                <div class="product-stock-name">${escapeHTML(item.name)}</div>
+                <span class="product-type-tag">${escapeHTML(item.type)}</span>
+              </div>
+              <span class="badge ${badgeClass}">${badgeText}</span>
+            </div>
+
+            <div class="product-pricing-bar">
+              <span class="price-usd-text">$${priceUSD.toFixed(2)} USD</span>
+              <span class="price-bs-text">≈ ${priceBs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Bs.</span>
+            </div>
+
+            <div class="stock-counter-row">
+              <div>
+                <div class="stock-count-label">Ajuste de Stock</div>
+                <div class="stock-count-number">${item.stock} piezas</div>
+              </div>
+
+              <div class="stock-action-buttons">
+                <button 
+                  type="button" 
+                  class="btn-stock-delta" 
+                  onclick="updateQuickStockDelta('${item.id}', -1)"
+                  ${item.stock <= 0 ? 'disabled' : ''}
+                  aria-label="Restar una pieza"
+                >−</button>
+
+                <button 
+                  type="button" 
+                  class="btn-stock-delta" 
+                  onclick="updateQuickStockDelta('${item.id}', 1)"
+                  aria-label="Sumar una pieza"
+                >+</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    async function updateQuickStockDelta(itemId, delta) {
+      const items = getCombinedInventoryList();
+      const item = items.find(i => i.id === itemId);
+      if (!item) return;
+
+      const currentStk = item.stock;
+      const newStk = Math.max(0, currentStk + delta);
+
+      if (newStk === currentStk && delta < 0) {
+        showToast("⚠️ Stock ya se encuentra en 0");
+        return;
+      }
+
+      // Optimistic update
+      item.stock = newStk;
+      renderStockList();
+
+      try {
+        if (item.isLot) {
+          await updateDoc(doc(db, "lotes", itemId), {
+            currentStock: newStk,
+            updatedAt: new Date().toISOString()
+          });
+        } else {
+          await setDoc(doc(db, "models", itemId), {
+            stock: newStk,
+            updatedAt: new Date().toISOString()
+          }, { merge: true });
+
+          await setDoc(doc(db, "inventory", itemId), {
+            stock: newStk,
+            updatedAt: new Date().toISOString()
+          }, { merge: true });
+        }
+
+        const icon = delta > 0 ? "➕" : "➖";
+        showToast(`${icon} ${item.name}: ${newStk} disponibles`);
+      } catch (err) {
+        console.error("Error al actualizar stock rápido:", err);
+        showToast("❌ Error al guardar stock en Firebase");
+        item.stock = currentStk;
+        renderStockList();
+      }
+    }
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Exponer funciones globales para onclick en los templates
+    Object.assign(window, {
+      handleGoogleSignIn,
+      handleLogout,
+      switchTab,
+      updateExchangeRate,
+      calculateLotTotals,
+      handleSaveLot,
+      handleSaleProductChange,
+      calculateSaleTotals,
+      handleSaveSale,
+      changeSalesPage,
+      handleStockSearch,
+      applyStockFilter,
+      updateQuickStockDelta
+    });
+
+    // Iniciar el listener de Auth
+    setupAuthListener();
+  </script>
+</body>
+</html>
